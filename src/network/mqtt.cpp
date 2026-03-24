@@ -5,6 +5,7 @@
 #include "config.h"
 #include "mqtt.h"
 #include "wifi.h"
+#include "game/handler.h"
 
 namespace {
 WiFiClient wifiClient;
@@ -12,11 +13,9 @@ PubSubClient mqttClient;
 uint32_t lastMqttConnectAttemptMs = 0U;
 
 void mqttMessageCallback(char* topic, uint8_t* payload, unsigned int length) {
-  // TODO: dispatch to game/handler.cpp
-  (void)topic;
-  (void)payload;
-  (void)length;
+  handleMqttCommand(topic, payload, length);
 }
+
 }  // namespace
 
 void setupMqtt() {

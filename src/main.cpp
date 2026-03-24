@@ -10,6 +10,7 @@ void setup() {
   Serial.begin(115200);
   resetRuntimeState();
 
+  pinMode(PIN_TRIGGER, INPUT_PULLUP);
   setupWifi();
   setupMqtt();
   setupIr();
@@ -37,10 +38,10 @@ void loop() {
     return;
   }
 
-if (deviceRuntimeState.state == DeviceState::DEAD || deviceRuntimeState.state == DeviceState::RESPAWNING) {
-  processRespawn(nowMs);
-  return;
-}
+  if (deviceRuntimeState.state == DeviceState::DEAD || deviceRuntimeState.state == DeviceState::RESPAWNING) {
+    processRespawn(nowMs);
+    return;
+  }
 
   deviceRuntimeState.state = DeviceState::IN_GAME;
   handleTrigger(nowMs);
