@@ -25,6 +25,10 @@ void wifiLoop() {
     Serial.printf("[WiFi] Connected — IP: %s\n", WiFi.localIP().toString().c_str());
   }
 
+  if (!connected && wasConnected) {
+    Serial.println("[WiFi] Disconnected");
+  }
+
   wasConnected = connected;
 
   if (WiFi.status() == WL_CONNECTED) {

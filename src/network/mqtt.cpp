@@ -5,18 +5,18 @@
 #include "config.h"
 #include "mqtt.h"
 #include "wifi.h"
-#include "game/handler.h"
+#include "game/commands.h"
 
 namespace {
-WiFiClient wifiClient;
-PubSubClient mqttClient;
-uint32_t lastMqttConnectAttemptMs = 0U;
+  WiFiClient wifiClient;
+  PubSubClient mqttClient;
+  uint32_t lastMqttConnectAttemptMs = 0U;
 
-void mqttMessageCallback(char* topic, uint8_t* payload, unsigned int length) {
-  handleMqttCommand(topic, payload, length);
+  void mqttMessageCallback(char* topic, uint8_t* payload, unsigned int length) {
+    handleMqttCommand(topic, payload, length);
+  }
+
 }
-
-}  // namespace
 
 void setupMqtt() {
   mqttClient.setClient(wifiClient);
@@ -39,6 +39,7 @@ void mqttLoop() {
   char clientId[32]       = {0};
   char lwtPayload[128]    = {0};
   char playerCmdTopic[64] = {0};
+  char gearCmdTopic[64] = {0};
 
   snprintf(clientId, sizeof(clientId),
     "device-%u", DEVICE_ID);
@@ -49,6 +50,9 @@ void mqttLoop() {
 
   snprintf(playerCmdTopic, sizeof(playerCmdTopic),
     "%s/%u/command", MQTT_TOPIC_PLAYER_CMD, DEVICE_ID);
+
+  snprintf(gearCmdTopic, sizeof(gearCmdTopic),
+    "%s/%u/command", MQTT_TOPIC_GEAR_CMD, DEVICE_ID);
 
   const bool connected = mqttClient.connect(
     clientId,
@@ -68,6 +72,7 @@ void mqttLoop() {
   // Subscribe
   mqttClient.subscribe(MQTT_TOPIC_COMMAND);  // game/control
   mqttClient.subscribe(playerCmdTopic);       // game/player/{id}/command
+  mqttClient.subscribe(gearCmdTopic);
 
   // Publish online status
   char onlinePayload[128] = {0};

@@ -11,7 +11,8 @@ enum class DeviceState : uint8_t {
   IDLE,
   IN_GAME,
   DEAD,
-  RESPAWNING
+  RESPAWNING,
+  OTA_UPDATING,
 };
 
 struct DeviceRuntimeState {

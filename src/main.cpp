@@ -2,6 +2,7 @@
 
 #include "game/handler.h"
 #include "ir/ir.h"
+#include "led/led.h"
 #include "network/mqtt.h"
 #include "network/wifi.h"
 #include "state.h"
@@ -11,6 +12,7 @@ void setup() {
   resetRuntimeState();
 
   pinMode(PIN_TRIGGER, INPUT_PULLUP);
+  setupLed();
   setupWifi();
   setupMqtt();
   setupIr();
@@ -22,6 +24,7 @@ void loop() {
   wifiLoop();
   mqttLoop();
   irLoop();
+  ledLoop(nowMs);
 
   if (!isWifiConnected()) {
     deviceRuntimeState.state = DeviceState::CONNECTING_WIFI;
